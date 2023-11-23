@@ -17,13 +17,9 @@ VALUES ('John', 'Doe', '555-1234');
 INSERT INTO Friends (UserName, RealName, Phone)
 VALUES ('Jane', 'Smith', '555-5678');
 
---Adding a friend with a parent
+-- adding a friend with a parent
 INSERT INTO Friends (UserName, RealName, Phone, ParentFriendID)
 VALUES ('John Jr.', 'Doe', '555-1111', 1);
-
-SELECT f1.UserName AS FriendName, f2.UserName AS ParentName
-FROM Friends f1
-LEFT JOIN Friends f2 ON f1.ParentFriendID = f2.FriendID;
 
 CREATE TABLE IF NOT EXISTS Users (
     UserID INT PRIMARY KEY AUTO_INCREMENT,
@@ -40,18 +36,43 @@ CREATE TABLE IF NOT EXISTS FriendRequests (
 );
 
 INSERT INTO FriendRequests (SenderUserID, ReceiverUserID)
-VALUES (1, 2); --Assuming user with ID 1 is sending a friend request to user with ID 2
+VALUES (1, 2); -- user id 1 adding user id 2
 
---To accept
+-- table for videos
+CREATE TABLE IF NOT EXISTS Videos (
+    VideoID INT PRIMARY KEY AUTO_INCREMENT,
+    UniqueVideoID VARCHAR(50) UNIQUE NOT NULL,
+    Likes INT DEFAULT 0,
+    LocationOfFile VARCHAR(255) NOT NULL,
+    VideoName VARCHAR(50) NOT NULL,
+    PeopleWhoLikedIt TEXT -- list of user ids who liked it
+);
+
+-- inserting a video
+INSERT INTO Videos (UniqueVideoID, LocationOfFile, VideoName)
+VALUES ('UniVidId', '/videos/UniVidId.mp4', 'video');
+
+-- number of likes
+UPDATE Videos
+SET Likes = 10
+WHERE UniqueVideoID = 'UniVidId';
+
+-- people who liked the video
+UPDATE Videos
+SET PeopleWhoLikedIt = 'id of people who liked'
+WHERE UniqueVideoID = 'UniVidId';
+
+-- accept friend requests
 UPDATE FriendRequests
 SET Status = 'Accepted'
 WHERE SenderUserID = 1 AND ReceiverUserID = 2;
 
---To reject
+-- reject friend requests
 UPDATE FriendRequests
 SET Status = 'Rejected'
 WHERE SenderUserID = 1 AND ReceiverUserID = 2;
 
+-- pending friend requests
 SELECT Users.UserName AS SenderName
 FROM FriendRequests
 JOIN Users ON FriendRequests.SenderUserID = Users.UserID
