@@ -19,6 +19,12 @@
 #include "recorder.h"
 #include <QStackedWidget>
 #include "recordvideopage.h"
+#include <QLineEdit>
+#include <QStandardItemModel>
+#include <QCompleter>
+#include <QSortFilterProxyModel>
+#include <QListWidget>
+#include <QScrollArea>
 
 // read in videos and thumbnails to this directory
 std::vector<TheButtonInfo> getInfoIn (std::string loc) {
@@ -52,7 +58,7 @@ std::vector<TheButtonInfo> getInfoIn (std::string loc) {
                     qDebug() << "warning: skipping video because I couldn't process thumbnail " << thumb << "\n";
             }
             else
-                qDebug() << "warning: skipping video because I couldn't find thumbnail " << thumb << endl;
+                qDebug() << "warning: skipping video because I couldn't find thumbnail " << thumb << Qt::endl;
         }
     }
 
@@ -137,9 +143,89 @@ QWidget* createRecordVideoPage(QStackedWidget *stackedWidget, Recorder *recorder
     return recordVideoPage;
 }
 
+QWidget* createSearchPage(QStackedWidget *stackedWidget) {
+    // create the Search page widget
+    QWidget *searchPage = new QWidget();
+    QVBoxLayout *searchPageLayout = new QVBoxLayout(searchPage);
+
+    // create a QLineEdit for the search bar
+    QLineEdit *searchBar = new QLineEdit(searchPage);
+    searchBar->setPlaceholderText("Search for a user...");
+
+    // create a QStringList to store the dummy user data
+    QStringList users;
+    users << "John Doe" << "David Parks" << "Emma Johnson" << "Michael Brown" << "Sophia Miller" << "James Wilson" << "Olivia Taylor" << "Liam Thompson" << "Ava Anderson" << "William Harris" << "Isabella Garcia" << "Mason Moore" << "Mia Clark" << "Ethan Martinez" << "Emily Rodriguez" << "Jacob Lewis" << "Sofia Lee" << "Logan Robinson" << "Charlotte Turner" << "Ethan Torres" << "Grace Martinez" << "Daniel Garcia" << "Madison Wilson" << "Levi Torres" << "Abigail Clark" << "Matthew Martinez" << "Harper Rodriguez" << "Jack Lewis" << "Ella Moore" << "Ethan Torres" << "Grace Martinez" << "Daniel Garcia" << "Madison Wilson" << "Levi Torres" << "Abigail Clark" << "Matthew Martinez" << "Harper Rodriguez" << "Jack Lewis" << "Ella Moore" << "Ethan Torres" << "Grace Martinez" << "Daniel Garcia" << "Madison Wilson" << "Levi Torres" << "Abigail Clark" << "Matthew Martinez" << "Harper Rodriguez" << "Jack Lewis" << "Ella Moore";
+
+    // create a QListWidget to list all users
+    QListWidget *userList = new QListWidget(searchPage);
+
+    // create a QCompleter to provide auto-completion suggestions
+    QCompleter *completer = new QCompleter(users, searchPage);
+    searchBar->setCompleter(completer);
+
+    // add the search bar to the Search page
+    searchPageLayout->addWidget(searchBar);
+
+    // add a search button to the Search page
+    QPushButton *searchButton = new QPushButton(QIcon(":/path/to/magnifying/glass/icon.png"), "", searchPage);
+    searchPageLayout->addWidget(searchButton);
+
+    // add a QScrollArea to make the page scrollable
+    QScrollArea *scrollArea = new QScrollArea(searchPage);
+    QWidget *scrollWidget = new QWidget(scrollArea);
+    QVBoxLayout *scrollLayout = new QVBoxLayout(scrollWidget);
+    scrollArea->setWidget(scrollWidget);
+    scrollArea->setWidgetResizable(true);
+
+    // add the QListWidget to the QScrollArea
+    scrollLayout->addWidget(userList);
+
+    // add the QScrollArea to the Search page
+    searchPageLayout->addWidget(scrollArea);
+
+    // add the Search page to the stacked widget
+    stackedWidget->addWidget(searchPage);
+
+    // connect the textChanged signal of the QLineEdit to the slot function that filters the users
+    QAbstractButton::connect(searchBar, &QLineEdit::textChanged, [=](const QString &text) {
+        for (int i = 0; i < userList->count(); ++i) {
+            QListWidgetItem *item = userList->item(i);
+            item->setHidden(!item->text().contains(text, Qt::CaseInsensitive));
+        }
+    });
+
+    // connect the clicked signal of the search button to the slot function that filters the users
+    QAbstractButton::connect(searchButton, &QPushButton::clicked, [=]() {
+        for (int i = 0; i < userList->count(); ++i) {
+            QListWidgetItem *item = userList->item(i);
+            item->setHidden(!item->text().contains(searchBar->text(), Qt::CaseInsensitive));
+        }
+    });
+
+    // add all users to the QListWidget
+    for (const QString &user : users) {
+        QWidget *userWidget = new QWidget(userList);
+        QHBoxLayout *userLayout = new QHBoxLayout(userWidget);
+
+        QLabel *userLabel = new QLabel(user, userWidget);
+        userLayout->addWidget(userLabel);
+
+        QPushButton *sendRequestButton = new QPushButton("Send friend request", userWidget);
+        userLayout->addWidget(sendRequestButton);
+
+        QListWidgetItem *item = new QListWidgetItem(userList);
+        item->setSizeHint(userWidget->sizeHint());
+        userList->addItem(item);
+        userList->setItemWidget(item, userWidget);
+    }
+
+    return searchPage;
+}
+
+
 int main(int argc, char *argv[]) {
     // let's just check that Qt is operational first
-    qDebug() << "Qt version: " << QT_VERSION_STR << endl;
+    qDebug() << "Qt version: " << QT_VERSION_STR << Qt::endl;
 
     // create the Qt Application
     QApplication app(argc, argv);
@@ -215,6 +301,9 @@ int main(int argc, char *argv[]) {
     // create the Memories page widget
     createMemoriesPage(stackedWidget, buttonWidgetmem);
 
+    // create the Search page widget
+    createSearchPage(stackedWidget);
+
     // connect the recordButton and memoriesButton to switch pages
     QObject::connect(recordButton, &QPushButton::clicked, [=]() {
         stackedWidget->setCurrentIndex(1); // switch to the Record Video page
@@ -227,6 +316,11 @@ int main(int argc, char *argv[]) {
     // connect the homeButton to switch to the homepage
     QObject::connect(homeButton, &QPushButton::clicked, [=]() {
         stackedWidget->setCurrentIndex(0); // switch to the homepage
+    });
+
+    // connect the searchButton to switch to the Search page
+    QObject::connect(searchButton, &QPushButton::clicked, [=]() {
+        stackedWidget->setCurrentIndex(3); // switch to the Search page
     });
 
     // add navbar to the top layout of your window
