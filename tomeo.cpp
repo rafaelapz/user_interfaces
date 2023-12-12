@@ -190,7 +190,9 @@ QWidget* createSearchPage(QStackedWidget *stackedWidget) {
     QAbstractButton::connect(searchBar, &QLineEdit::textChanged, [=](const QString &text) {
         for (int i = 0; i < userList->count(); ++i) {
             QListWidgetItem *item = userList->item(i);
-            item->setHidden(!item->text().contains(text, Qt::CaseInsensitive));
+            QWidget *userWidget = userList->itemWidget(item);
+            QLabel *userLabel = userWidget->findChild<QLabel*>();
+            item->setHidden(!userLabel->text().contains(text, Qt::CaseInsensitive));
         }
     });
 
@@ -198,7 +200,9 @@ QWidget* createSearchPage(QStackedWidget *stackedWidget) {
     QAbstractButton::connect(searchButton, &QPushButton::clicked, [=]() {
         for (int i = 0; i < userList->count(); ++i) {
             QListWidgetItem *item = userList->item(i);
-            item->setHidden(!item->text().contains(searchBar->text(), Qt::CaseInsensitive));
+            QWidget *userWidget = userList->itemWidget(item);
+            QLabel *userLabel = userWidget->findChild<QLabel*>();
+            item->setHidden(!userLabel->text().contains(searchBar->text(), Qt::CaseInsensitive));
         }
     });
 
