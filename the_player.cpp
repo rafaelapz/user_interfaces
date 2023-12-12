@@ -3,6 +3,7 @@
 //
 
 #include "the_player.h"
+#include "qslider.h"
 
 // all buttons have been setup, store pointers here
 void ThePlayer::setContent(std::vector<TheButton*>* b, std::vector<TheButtonInfo>* i) {
@@ -32,3 +33,12 @@ void ThePlayer::jumpTo (TheButtonInfo* button) {
     setMedia( * button -> url);
     play();
 }
+
+void ThePlayer::play() {
+    QMediaPlayer::play();
+}
+
+void ThePlayer::pause() {
+    QMediaPlayer::pause();
+}
+

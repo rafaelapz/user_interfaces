@@ -8,6 +8,7 @@
 
 #include <QApplication>
 #include <QMediaPlayer>
+#include "qslider.h"
 #include "the_button.h"
 #include <vector>
 #include <QTimer>
@@ -32,6 +33,9 @@ public:
         mTimer->start();
         connect( mTimer, SIGNAL (timeout()), SLOT ( shuffle() ) ); // ...running shuffle method
     }
+
+    void play();
+    void pause();
 
     // all buttons have been setup, store pointers here
     void setContent(std::vector<TheButton*>* b, std::vector<TheButtonInfo>* i);

@@ -25,6 +25,7 @@
 #include <QSortFilterProxyModel>
 #include <QListWidget>
 #include <QScrollArea>
+#include <QToolButton>
 
 // read in videos and thumbnails to this directory
 std::vector<TheButtonInfo> getInfoIn (std::string loc) {
@@ -108,10 +109,50 @@ QWidget* createMemoriesPage(QStackedWidget *stackedWidget, QWidget *buttonWidget
     return memoriesPage;
 }
 
-QWidget* createHomepage(QStackedWidget *stackedWidget, QVideoWidget *videoWidget, QWidget *buttonWidget, ThePlayer *player, std::vector<TheButton*> *buttons, std::vector<TheButtonInfo> *videos) {
+QWidget* createHomepage(QStackedWidget *stackedWidget, QVideoWidget *videoWidget, ThePlayer *player, std::vector<TheButton*> *buttons, std::vector<TheButtonInfo> *videos) {
     // create the homepage widget
     QWidget *homepage = new QWidget();
     QVBoxLayout *homepageLayout = new QVBoxLayout(homepage);
+    // create a QHBoxLayout for the buttons
+    QHBoxLayout *buttonLayout = new QHBoxLayout();
+
+    // create playback control buttons
+    QToolButton *playButton = new QToolButton();
+    QToolButton *pauseButton = new QToolButton();
+
+    // set the icons of the buttons
+    playButton->setIcon(QIcon("://play-circle-fill.svg"));
+    pauseButton->setIcon(QIcon("://pause-circle-fill.svg"));
+
+    // set the stylesheet of the buttons
+    playButton->setStyleSheet("QToolButton {"
+                              " background-color: #ffffff;"
+                              " border: none;"
+                              "}"
+                              "QToolButton:pressed {"
+                              " background-color: #606060;"
+                              "}");
+    pauseButton->setStyleSheet("QToolButton {"
+                               " background-color: #ffffff;"
+                               " border: none;"
+                               "}"
+                               "QToolButton:pressed {"
+                               " background-color: #606060;"
+                               "}");
+
+    // connect the clicked signals of the buttons to the slots of ThePlayer
+    QObject::connect(playButton, &QToolButton::clicked, player, &ThePlayer::play);
+    QObject::connect(pauseButton, &QToolButton::clicked, player, &ThePlayer::pause);
+
+    // add the buttons to the button layout
+    buttonLayout->addWidget(playButton);
+    buttonLayout->addWidget(pauseButton);
+
+    // create a QWidget for the buttons
+    QWidget *buttonWidget = new QWidget();
+    buttonWidget->setLayout(buttonLayout);
+
+    // add the video widget and the button widget to the homepage layout
     homepageLayout->addWidget(videoWidget);
     homepageLayout->addWidget(buttonWidget);
 
@@ -120,6 +161,8 @@ QWidget* createHomepage(QStackedWidget *stackedWidget, QVideoWidget *videoWidget
 
     return homepage;
 }
+
+
 
 QWidget* createRecordVideoPage(QStackedWidget *stackedWidget, Recorder *recorder) {
     // create the Record Video page widget
@@ -297,7 +340,7 @@ int main(int argc, char *argv[]) {
     Recorder *recorder = new Recorder;
 
     // create the homepage widget
-    createHomepage(stackedWidget, videoWidget, buttonWidget, player, &buttons, &videos);
+    createHomepage(stackedWidget, videoWidget, player, &buttons, &videos);
 
     // create the Record Video page widget
     createRecordVideoPage(stackedWidget, recorder);
