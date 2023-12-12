@@ -198,7 +198,12 @@ QWidget* createSearchPage(QStackedWidget *stackedWidget) {
     // create a QStringList to store the dummy user data
     QStringList users;
     users << "John Doe" << "David Parks" << "Emma Johnson" << "Michael Brown" << "Sophia Miller" << "James Wilson" << "Olivia Taylor" << "Liam Thompson" << "Ava Anderson" << "William Harris" << "Isabella Garcia" << "Mason Moore" << "Mia Clark" << "Ethan Martinez" << "Emily Rodriguez" << "Jacob Lewis" << "Sofia Lee" << "Logan Robinson" << "Charlotte Turner" << "Ethan Torres" << "Grace Martinez" << "Daniel Garcia" << "Madison Wilson" << "Levi Torres" << "Abigail Clark" << "Matthew Martinez" << "Harper Rodriguez" << "Jack Lewis" << "Ella Moore" << "Ethan Torres" << "Grace Martinez" << "Daniel Garcia" << "Madison Wilson" << "Levi Torres" << "Abigail Clark" << "Matthew Martinez" << "Harper Rodriguez" << "Jack Lewis" << "Ella Moore" << "Ethan Torres" << "Grace Martinez" << "Daniel Garcia" << "Madison Wilson" << "Levi Torres" << "Abigail Clark" << "Matthew Martinez" << "Harper Rodriguez" << "Jack Lewis" << "Ella Moore";
-
+    // create a QStringList to store the dummy user usernames
+    QStringList usernames;
+    for (const QString &user : users) {
+        QString username = "@" + user.toLower().replace(" ", "_");
+        usernames << username;
+    }
     // create a QListWidget to list all users
     QListWidget *userList = new QListWidget(searchPage);
 
@@ -250,11 +255,11 @@ QWidget* createSearchPage(QStackedWidget *stackedWidget) {
     });
 
     // add all users to the QListWidget
-    for (const QString &user : users) {
+    for (int i = 0; i < users.size(); ++i) {
         QWidget *userWidget = new QWidget(userList);
         QHBoxLayout *userLayout = new QHBoxLayout(userWidget);
 
-        QLabel *userLabel = new QLabel(user, userWidget);
+        QLabel *userLabel = new QLabel(users.at(i) + " " + usernames.at(i), userWidget);
         userLayout->addWidget(userLabel);
 
         QPushButton *sendRequestButton = new QPushButton("Send friend request", userWidget);
@@ -265,6 +270,7 @@ QWidget* createSearchPage(QStackedWidget *stackedWidget) {
         userList->addItem(item);
         userList->setItemWidget(item, userWidget);
     }
+
 
     return searchPage;
 }
@@ -372,6 +378,23 @@ int main(int argc, char *argv[]) {
 
     // add navbar to the top layout of your window
     top->addWidget(navbar);
+
+
+
+
+
+
+
+
+
+    // create the four buttons. DO NOT DELETE
+    for ( int i = 0; i < 4; i++ ) {
+        TheButton *button = new TheButton(buttonWidget);
+        button->connect(button, SIGNAL(jumpTo(TheButtonInfo* )), player, SLOT (jumpTo(TheButtonInfo*))); // when clicked, tell the player to play.
+        buttons.push_back(button);
+        layout->addWidget(button);
+        button->init(&videos.at(i));
+    }
 
     // tell the player what buttons and videos are available
     player->setContent(&buttons, & videos);
