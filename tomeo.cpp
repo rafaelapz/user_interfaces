@@ -26,6 +26,7 @@
 #include <QListWidget>
 #include <QScrollArea>
 #include <QToolButton>
+#include "login.h"
 
 // read in videos and thumbnails to this directory
 std::vector<TheButtonInfo> getInfoIn (std::string loc) {
@@ -282,6 +283,11 @@ int main(int argc, char *argv[]) {
 
     // create the Qt Application
     QApplication app(argc, argv);
+
+    // Show the login dialog
+    if (!showLoginDialog()) {
+        return 1; // If the user is denied access, close the app
+    }
 
     // collect all the videos in the folder
     std::vector<TheButtonInfo> videos;
