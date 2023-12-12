@@ -373,23 +373,6 @@ int main(int argc, char *argv[]) {
     // add navbar to the top layout of your window
     top->addWidget(navbar);
 
-
-
-
-
-
-
-
-
-    // create the four buttons
-    for ( int i = 0; i < 4; i++ ) {
-        TheButton *button = new TheButton(buttonWidget);
-        button->connect(button, SIGNAL(jumpTo(TheButtonInfo* )), player, SLOT (jumpTo(TheButtonInfo*))); // when clicked, tell the player to play.
-        buttons.push_back(button);
-        layout->addWidget(button);
-        button->init(&videos.at(i));
-    }
-
     // tell the player what buttons and videos are available
     player->setContent(&buttons, & videos);
 
