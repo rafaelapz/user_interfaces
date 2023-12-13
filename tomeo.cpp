@@ -184,6 +184,10 @@ QWidget* createRecordVideoPage(QStackedWidget *stackedWidget, Recorder *recorder
 
     recordVideoPageLayout->addWidget(captionField);
 
+    // add a QPushButton for the "Submit Post" button
+    QPushButton *submitPostButton = new QPushButton("Submit Post", recordVideoPage);
+    recordVideoPageLayout->addWidget(submitPostButton);
+
     // add the Record Video page to the stacked widget
     stackedWidget->addWidget(recordVideoPage);
 
