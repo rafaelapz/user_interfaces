@@ -361,6 +361,7 @@ QWidget* createHomepage(QStackedWidget *stackedWidget, QVideoWidget *videoWidget
 
 
 
+
     // add the left arrow button to the button layout
     buttonLayout->addWidget(leftArrowButton);
 
@@ -404,6 +405,13 @@ QWidget* createHomepage(QStackedWidget *stackedWidget, QVideoWidget *videoWidget
     QLabel *subtitleLabel = new QLabel;
     subtitleLabel->setAlignment(Qt::AlignCenter);
 
+    // Set the font size
+    QFont subtitleFont = subtitleLabel->font();
+    subtitleFont.setPointSize(16);  // Set the desired font size
+    subtitleLabel->setFont(subtitleFont);
+
+
+
     // Create like button and QLabel for likes
     QPushButton* likeButton = new QPushButton();
     likeButton->setIcon(QIcon(":/heart.png"));
@@ -425,17 +433,29 @@ QWidget* createHomepage(QStackedWidget *stackedWidget, QVideoWidget *videoWidget
         const QString currentVideoUrl = player->currentMedia().canonicalUrl().toString();
         for (size_t i = 0; i < videos->size(); ++i) {
             if (videos->at(i).url->toString() == currentVideoUrl) {
-                subtitleLabel->setText(videos->at(i+1).subtitle);
-                likeLabel->setText(QString::number(videos->at(i+1).likes));
+                subtitleLabel->setText(videos->at(i + 1).subtitle);
+                likeLabel->setText(QString::number(videos->at(i + 1).likes));
                 break;
             }
         }
     });
 
-    // Add the video widget, button widget, and info widget to the homepage layout
+    // Connect like button click signal to the slot
+    QObject::connect(likeButton, &QPushButton::clicked, [=]() {
+        // Emit like button clicked signal
+
+        buttons->at(0)->likeButtonClicked();
+
+        // Update the like label immediately
+        likeLabel->setText(QString::number(videos->at(0).likes));
+    });
+
+
+    // Add the video widget, info widget, button widget to the homepage layout
     homepageLayout->addWidget(videoWidget);
-    homepageLayout->addWidget(buttonWidget);
     homepageLayout->addWidget(infoWidget);
+    homepageLayout->addWidget(buttonWidget);
+
 
     // add the homepage to the stacked widget
     stackedWidget->addWidget(homepage);
@@ -445,6 +465,7 @@ QWidget* createHomepage(QStackedWidget *stackedWidget, QVideoWidget *videoWidget
         subtitleLabel->setText(videos->at(0).subtitle);
         likeLabel->setText(QString::number(videos->at(0).likes));
     }
+
 
     // Trigger the initial update for the first video when the application is opened
     player->simulateMediaChanged();

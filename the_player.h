@@ -28,6 +28,7 @@ public:
         mTimer->setInterval(1000);
         mTimer->start();
         connect(mTimer, SIGNAL(timeout()), SLOT(shuffle())); // changed to use shuffle directly
+
     }
 
     void play();
