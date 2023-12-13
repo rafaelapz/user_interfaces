@@ -8,6 +8,7 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+        likesubtitle.cpp \
         login.cpp \
         recorder.cpp \
         recordvideopage.cpp \
@@ -16,6 +17,7 @@ SOURCES += \
         tomeo.cpp
 
 HEADERS += \
+    likesubtitle.h \
     login.h \
     recorder.h \
     recordvideopage.h \
