@@ -18,7 +18,6 @@
 #include "the_button.h"
 #include "recorder.h"
 #include <QStackedWidget>
-#include "recordvideopage.h"
 #include <QLineEdit>
 #include <QStandardItemModel>
 #include <QCompleter>
@@ -170,10 +169,10 @@ QWidget* createRecordVideoPage(QStackedWidget *stackedWidget, Recorder *recorder
     QWidget *recordVideoPage = new QWidget();
     QVBoxLayout *recordVideoPageLayout = new QVBoxLayout(recordVideoPage);
     QPushButton *startButton = new QPushButton("Start Recording", recordVideoPage);
-    QAbstractButton::connect(startButton, &QPushButton::clicked, recorder, &Recorder::startRecording);
+    //QAbstractButton::connect(startButton, &QPushButton::clicked, recorder, &Recorder::startRecording);
     recordVideoPageLayout->addWidget(startButton);
     QPushButton *stopButton = new QPushButton("Stop Recording", recordVideoPage);
-    QAbstractButton::connect(stopButton, &QPushButton::clicked, recorder, &Recorder::stopRecording);
+    //QAbstractButton::connect(stopButton, &QPushButton::clicked, recorder, &Recorder::stopRecording);
     recordVideoPageLayout->addWidget(stopButton);
 
     // add a QLabel to the Record Video page
@@ -284,6 +283,10 @@ int main(int argc, char *argv[]) {
     // create the Qt Application
     QApplication app(argc, argv);
 
+    app.setStyleSheet("QWidget { background-color: black; color: white; }"
+                      "QPushButton { border-style: solid; border-width: 2px; border-color: white;}"
+                      "QPushButton:hover { background-color: white; color: black; }");
+
     // Show the login dialog
     if (!showLoginDialog()) {
         return 1; // If the user is denied access, close the app
@@ -363,7 +366,6 @@ int main(int argc, char *argv[]) {
     // create the Search page widget
     createSearchPage(stackedWidget);
 
-    // connect the recordButton and memoriesButton to switch pages
     QObject::connect(recordButton, &QPushButton::clicked, [=]() {
         stackedWidget->setCurrentIndex(1); // switch to the Record Video page
     });

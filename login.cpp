@@ -4,20 +4,42 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include <QMap>
+#include <QLabel>
+
+#include "login.h"
+#include <QDialog>
+#include <QVBoxLayout>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QLabel>
+#include <QMap>
+
+#include "login.h"
+#include <QDialog>
+#include <QVBoxLayout>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QLabel>
+#include <QMap>
 
 bool showLoginDialog() {
     QDialog *loginDialog = new QDialog();
     QVBoxLayout *layout = new QVBoxLayout(loginDialog);
+    layout->setSpacing(10); // Set the spacing to 10 pixels
 
+    QLabel *usernameLabel = new QLabel("Username");
     QLineEdit *usernameField = new QLineEdit();
+    QLabel *passwordLabel = new QLabel("Password");
     QLineEdit *passwordField = new QLineEdit();
     passwordField->setEchoMode(QLineEdit::Password);
-
     QPushButton *loginButton = new QPushButton("Login");
 
+    layout->addWidget(usernameLabel);
     layout->addWidget(usernameField);
+    layout->addWidget(passwordLabel);
     layout->addWidget(passwordField);
     layout->addWidget(loginButton);
+    layout->setContentsMargins(50, 50, 50, 50);
 
     QMap<QString, QString> users;
     users.insert("johndoe", "password1");

@@ -10,7 +10,6 @@ CONFIG += c++11
 SOURCES += \
         login.cpp \
         recorder.cpp \
-        recordvideopage.cpp \
         the_button.cpp \
         the_player.cpp \
         tomeo.cpp
@@ -18,7 +17,6 @@ SOURCES += \
 HEADERS += \
     login.h \
     recorder.h \
-    recordvideopage.h \
     the_button.h \
     the_player.h
 
