@@ -162,29 +162,34 @@ QWidget* createHomepage(QStackedWidget *stackedWidget, QVideoWidget *videoWidget
     return homepage;
 }
 
-
-
 QWidget* createRecordVideoPage(QStackedWidget *stackedWidget, Recorder *recorder) {
     // create the Record Video page widget
     QWidget *recordVideoPage = new QWidget();
     QVBoxLayout *recordVideoPageLayout = new QVBoxLayout(recordVideoPage);
-    QPushButton *startButton = new QPushButton("Start Recording", recordVideoPage);
+    //comment out the connections of buttons as they crash the app when camera is not connected on linux when clicked
     //QAbstractButton::connect(startButton, &QPushButton::clicked, recorder, &Recorder::startRecording);
+    QPushButton *startButton = new QPushButton("Start Recording", recordVideoPage);
     recordVideoPageLayout->addWidget(startButton);
-    QPushButton *stopButton = new QPushButton("Stop Recording", recordVideoPage);
     //QAbstractButton::connect(stopButton, &QPushButton::clicked, recorder, &Recorder::stopRecording);
+    QPushButton *stopButton = new QPushButton("Stop Recording", recordVideoPage);
     recordVideoPageLayout->addWidget(stopButton);
 
     // add a QLabel to the Record Video page
     QLabel *labelRecord = new QLabel("You are now on the Record Video page", recordVideoPage);
     recordVideoPageLayout->addWidget(labelRecord);
 
+    // add a QLineEdit for the video caption
+    QLineEdit *captionField = new QLineEdit("", recordVideoPage);
+    captionField->setPlaceholderText("Enter video caption here...");
+
+    recordVideoPageLayout->addWidget(captionField);
+
     // add the Record Video page to the stacked widget
     stackedWidget->addWidget(recordVideoPage);
-    //TODO: add caption to video/post button
-    //TODO: add return button
+
     return recordVideoPage;
 }
+
 
 QWidget* createSearchPage(QStackedWidget *stackedWidget) {
     // create the Search page widget
@@ -214,10 +219,6 @@ QWidget* createSearchPage(QStackedWidget *stackedWidget) {
     // add the search bar to the Search page
     searchPageLayout->addWidget(searchBar);
 
-    // add a search button to the Search page
-    QPushButton *searchButton = new QPushButton(QIcon(":/path/to/magnifying/glass/icon.png"), "", searchPage);
-    searchPageLayout->addWidget(searchButton);
-
     // add a QScrollArea to make the page scrollable
     QScrollArea *scrollArea = new QScrollArea(searchPage);
     QWidget *scrollWidget = new QWidget(scrollArea);
@@ -241,16 +242,6 @@ QWidget* createSearchPage(QStackedWidget *stackedWidget) {
             QWidget *userWidget = userList->itemWidget(item);
             QLabel *userLabel = userWidget->findChild<QLabel*>();
             item->setHidden(!userLabel->text().contains(text, Qt::CaseInsensitive));
-        }
-    });
-
-    // connect the clicked signal of the search button to the slot function that filters the users
-    QAbstractButton::connect(searchButton, &QPushButton::clicked, [=]() {
-        for (int i = 0; i < userList->count(); ++i) {
-            QListWidgetItem *item = userList->item(i);
-            QWidget *userWidget = userList->itemWidget(item);
-            QLabel *userLabel = userWidget->findChild<QLabel*>();
-            item->setHidden(!userLabel->text().contains(searchBar->text(), Qt::CaseInsensitive));
         }
     });
 
