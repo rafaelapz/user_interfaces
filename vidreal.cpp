@@ -296,7 +296,7 @@ int main(int argc, char *argv[]) {
     if (videos.size() == 0) {
         const int result = QMessageBox::information(
             NULL,
-            QString("Tomeo"),
+            QString("VidReal"),
             QString("no videos found! Add command line argument to \"quoted\" file location."));
         exit(-1);
     }
@@ -305,7 +305,7 @@ int main(int argc, char *argv[]) {
     QWidget window;
     QVBoxLayout *top = new QVBoxLayout();
     window.setLayout(top);
-    window.setWindowTitle("tomeo");
+    window.setWindowTitle("VidReal");
     window.setFixedSize(540, 960);
 
     // create navbar
@@ -381,14 +381,6 @@ int main(int argc, char *argv[]) {
 
     // add navbar to the top layout of your window
     top->addWidget(navbar);
-
-
-
-
-
-
-
-
 
     // create the four buttons. DO NOT DELETE
     for ( int i = 0; i < 4; i++ ) {

@@ -26,6 +26,8 @@ bool showLoginDialog() {
     QDialog *loginDialog = new QDialog();
     QVBoxLayout *layout = new QVBoxLayout(loginDialog);
 
+    loginDialog->setWindowTitle("VidReal");
+
     // Add QLabels
     QLabel *titleLabel = new QLabel("   VidReal - Show Your Authentic Self");
     titleLabel->setFont(QFont("Arial", 16, QFont::Bold));

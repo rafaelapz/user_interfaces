@@ -12,7 +12,7 @@ SOURCES += \
         recorder.cpp \
         the_button.cpp \
         the_player.cpp \
-        tomeo.cpp
+        vidreal.cpp
 
 HEADERS += \
     login.h \
