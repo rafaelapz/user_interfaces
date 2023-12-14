@@ -44,8 +44,8 @@ This project is licensed under the MIT License. It can be read at LICENSE.txt in
 If you have any questions, feel free to reach out or create an issue in the repository.
 
 # Prototyping
-Videos have been uploaded to youtube to show the progress of the project. The links are below:
-    Week 1:
-    Week 2:
-    Week 3:
-    Final Showcase:
+Videos have been uploaded to youtube to show the progress of the project. The links are below: <br>
+    Week 1: https://youtu.be/ECjzOnK_Exg?si=yRZuSQMgwwFi8mqD <br>
+    Week 2: https://youtu.be/Elfoz26hPpI?si=3X1Jouc2GcU6b9TK <br>
+    Week 3: https://youtu.be/J27FkQyr17U?si=FH6u-xe0bZUBXzqc <br>
+    Final Showcase: https://youtu.be/9oAsVQJEsjI?si=6uhKQRlXnAjGaGJG <br>
