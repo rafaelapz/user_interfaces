@@ -295,7 +295,7 @@ QWidget* createHomepage(QStackedWidget *stackedWidget, QVideoWidget *videoWidget
 
     // Set the font size
     QFont subtitleFont = subtitleLabel->font();
-    subtitleFont.setPointSize(16);  // Set the desired font size
+    subtitleFont.setPointSize(10);  // Set the desired font size
     subtitleLabel->setFont(subtitleFont);
 
 
