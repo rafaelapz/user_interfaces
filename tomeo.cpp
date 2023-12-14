@@ -126,164 +126,7 @@ QWidget* createMemoriesPage(QStackedWidget *stackedWidget, QWidget *buttonWidget
 
     return memoriesPage;
 }
-/*
-QWidget* createHomepage(QStackedWidget *stackedWidget, QVideoWidget *videoWidget, ThePlayer *player, std::vector<TheButton*> *buttons, std::vector<TheButtonInfo> *videos) {
-    // create the homepage widget
-    QWidget *homepage = new QWidget();
-    QVBoxLayout *homepageLayout = new QVBoxLayout(homepage);
-    // create a QHBoxLayout for the buttons
-    QHBoxLayout *buttonLayout = new QHBoxLayout();
 
-    // create playback control buttons
-    QToolButton *playButton = new QToolButton();
-    QToolButton *pauseButton = new QToolButton();
-
-    // create right arrow button
-    QToolButton *rightArrowButton = new QToolButton();
-    rightArrowButton->setIcon(QIcon("://right.svg"));
-    rightArrowButton->setStyleSheet("QToolButton {"
-                                    " background-color: #ffffff;"
-                                    " border: none;"
-                                    "}"
-                                    "QToolButton:pressed {"
-                                    " background-color: #606060;"
-                                    "}");
-
-    // Connect the clicked signal of the right arrow button to move to the next video
-    QObject::connect(rightArrowButton, &QToolButton::clicked, [=]() {
-        QString currentVideoUrl = player->currentMedia().canonicalUrl().toString();
-        for (size_t i = 0; i < buttons->size(); ++i) {
-            if (buttons->at(i)->info->url->toString() == currentVideoUrl) {
-                int nextIndex = (i + 1) % buttons->size();
-                TheButtonInfo* nextVideo = buttons->at(nextIndex)->info;
-                player->jumpTo(nextVideo);
-                break;
-            }
-        }
-    });
-
-    // create left arrow button
-    QToolButton *leftArrowButton = new QToolButton();
-    leftArrowButton->setIcon(QIcon("://left.svg"));
-    leftArrowButton->setStyleSheet("QToolButton {"
-                                   " background-color: #ffffff;"
-                                   " border: none;"
-                                   "}"
-                                   "QToolButton:pressed {"
-                                   " background-color: #606060;"
-                                   "}");
-
-    // Connect the clicked signal of the left arrow button to move to the previous video
-    QObject::connect(leftArrowButton, &QToolButton::clicked, [=]() {
-        QString currentVideoUrl = player->currentMedia().canonicalUrl().toString();
-        for (size_t i = 0; i < buttons->size(); ++i) {
-            if (buttons->at(i)->info->url->toString() == currentVideoUrl) {
-                int prevIndex = (i - 1 + buttons->size()) % buttons->size(); // Handle wrapping around to the end
-                TheButtonInfo* prevVideo = buttons->at(prevIndex)->info;
-                player->jumpTo(prevVideo);
-                break;
-            }
-        }
-    });
-
-    // add the left arrow button to the button layout
-    buttonLayout->addWidget(leftArrowButton);
-
-    // add the right and left arrow buttons to the button layout
-    buttonLayout->addWidget(leftArrowButton);
-    buttonLayout->addWidget(rightArrowButton);
-
-    // set the icons of the buttons
-    playButton->setIcon(QIcon("://play-circle-fill.svg"));
-    pauseButton->setIcon(QIcon("://pause-circle-fill.svg"));
-
-    // set the stylesheet of the buttons
-    playButton->setStyleSheet("QToolButton {"
-                              " background-color: #ffffff;"
-                              " border: none;"
-                              "}"
-                              "QToolButton:pressed {"
-                              " background-color: #606060;"
-                              "}");
-    pauseButton->setStyleSheet("QToolButton {"
-                               " background-color: #ffffff;"
-                               " border: none;"
-                               "}"
-                               "QToolButton:pressed {"
-                               " background-color: #606060;"
-                               "}");
-
-    // connect the clicked signals of the buttons to the slots of ThePlayer
-    QObject::connect(playButton, &QToolButton::clicked, player, &ThePlayer::play);
-    QObject::connect(pauseButton, &QToolButton::clicked, player, &ThePlayer::pause);
-
-    // add the buttons to the button layout
-    buttonLayout->addWidget(playButton);
-    buttonLayout->addWidget(pauseButton);
-
-    // create a QWidget for the buttons
-    QWidget *buttonWidget = new QWidget();
-    buttonWidget->setLayout(buttonLayout);
-
-    // Create QLabel for subtitle
-    QLabel *subtitleLabel = new QLabel;
-    subtitleLabel->setAlignment(Qt::AlignCenter);
-
-    // Create like button and QLabel for likes
-    QPushButton* likeButton = new QPushButton();
-    QLabel *likeLabel = new QLabel;
-
-    // Create a QHBoxLayout for subtitle and likes
-    QHBoxLayout *infoLayout = new QHBoxLayout();
-    infoLayout->addWidget(subtitleLabel);
-    infoLayout->addStretch(); // Add a stretchable space between subtitle and likes
-    infoLayout->addWidget(likeButton);
-    infoLayout->addWidget(likeLabel);
-
-    // Create a QWidget to hold the subtitle and likes layout
-    QWidget *infoWidget = new QWidget;
-    infoWidget->setLayout(infoLayout);
-
-    // Add the video widget, button widget, and info widget to the homepage layout
-    homepageLayout->addWidget(videoWidget);
-    homepageLayout->addWidget(buttonWidget);
-    homepageLayout->addWidget(infoWidget);
-
-    // connect the recordButton and memoriesButton to switch pages
-    QObject::connect(rightArrowButton, &QToolButton::clicked, [=]() {
-        stackedWidget->setCurrentIndex(1); // switch to the Record Video page
-    });
-
-    QObject::connect(leftArrowButton, &QToolButton::clicked, [=]() {
-        stackedWidget->setCurrentIndex(2); // switch to the Memories page
-    });
-
-    // connect the homeButton to switch back to the homepage
-    QObject::connect(player, &ThePlayer::mediaChanged, [=]() {
-        // Update subtitle and likes when the media changes
-        const QString currentVideoUrl = player->currentMedia().canonicalUrl().toString();
-        for (size_t i = 0; i < videos->size(); ++i) {
-            if (videos->at(i).url->toString() == currentVideoUrl) {
-                subtitleLabel->setText(videos->at(i).subtitle);
-                likeLabel->setText(QString::number(videos->at(i).likes));
-                break;
-            }
-        }
-    });
-
-    // add the homepage to the stacked widget
-    stackedWidget->addWidget(homepage);
-
-    // Set initial subtitle and likes for the first video
-    if (!videos->empty()) {
-        subtitleLabel->setText(videos->at(0).subtitle);
-        likeLabel->setText(QString::number(videos->at(0).likes));
-    }
-
-    return homepage;
-}
-
-*/
 
 void setInitialSubtitleAndLikes(ThePlayer *player, QLabel *subtitleLabel, QLabel *likeLabel, const std::vector<TheButtonInfo> *videos) {
     const QString currentVideoUrl = player->currentMedia().canonicalUrl().toString();
@@ -441,14 +284,27 @@ QWidget* createHomepage(QStackedWidget *stackedWidget, QVideoWidget *videoWidget
     });
 
     // Connect like button click signal to the slot
+    // Connect like button click signal to the slot
     QObject::connect(likeButton, &QPushButton::clicked, [=]() {
-        // Emit like button clicked signal
+        // Get the current video index
+        int currentIndex = -1;
+        for (size_t i = 0; i < buttons->size(); ++i) {
+            if (buttons->at(i)->info->url->toString() == player->currentMedia().canonicalUrl().toString()) {
+                currentIndex = i;
+                break;
+            }
+        }
 
-        buttons->at(0)->likeButtonClicked();
+        // Check if the current video index is valid
+        if (currentIndex >= 0 && currentIndex < static_cast<int>(videos->size())) {
+            // Emit like button clicked signal for the current video
+            buttons->at(currentIndex)->likeButtonClicked();
 
-        // Update the like label immediately
-        likeLabel->setText(QString::number(videos->at(0).likes));
+            // Update the like label immediately for the current video
+            likeLabel->setText(QString::number(videos->at(currentIndex).likes));
+        }
     });
+
 
 
     // Add the video widget, info widget, button widget to the homepage layout
