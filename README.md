@@ -2,13 +2,14 @@
 
 VidReal is a simple video sharing and social media application built using QtCreator and written in C++. It allows users to record, play, pause, and browse through a collection of videos. The application also lets users search for specific users and send them a friend request. 
 # Features
-
-Play, pause, and browse through videos
-Search for specific users
-Send friend requests to other users
-Record and post a new video (in progress)
-Switch between different pages such as Home, Record Video, Memories, and Search using the Navigation Bar
-Login system to access the application
+| Index No.  | Feature |
+| ------------- | ------------- |
+|1|Play, pause, and browse through videos|
+|2|Search for specific users|
+|3|Send friend requests to other users|
+|4|Record and post a new video (in progress)|
+|5|Switch between different pages such as Home, Record Video, Memories, and Search using the Navigation Bar|
+|6|Login system to access the application|
 
 # Pre-requisites
 
@@ -17,10 +18,10 @@ C++ compiler (g++ or clang)
 
 # Setup and Installation
 
-Clone the repository to your local machine.
-Open the project in Qt Creator.
-Build and run the project.
-In the run configuration 
+1. Clone the repository to your local machine.<br>
+2. Open the project in Qt Creator. <br>
+3. In the run configuration, write the path to the videos folder in quotes. for example "C://user_interfaces_project/videos". <br>
+4. Build and run the project. <br>
 
 # Usage
 
