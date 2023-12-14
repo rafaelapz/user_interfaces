@@ -11,14 +11,16 @@ SOURCES += \
         likesubtitle.cpp \
         login.cpp \
         recorder.cpp \
+        recordvideopage.cpp \
         the_button.cpp \
         the_player.cpp \
-        vidreal.cpp
+        tomeo.cpp
 
 HEADERS += \
     likesubtitle.h \
     login.h \
     recorder.h \
+    recordvideopage.h \
     the_button.h \
     the_player.h
 
