@@ -19,6 +19,9 @@ void ThePlayer::shuffle() {
     buttons -> at( updateCount++ % buttons->size() ) -> init( i );
 }
 
+void ThePlayer::simulateMediaChanged() {
+    emit mediaStatusChanged(QMediaPlayer::LoadedMedia);
+}
 void ThePlayer::playStateChanged (QMediaPlayer::State ms) {
     switch (ms) {
     case QMediaPlayer::State::StoppedState:

@@ -7,15 +7,20 @@
 
 #include <QPushButton>
 #include <QUrl>
-
 class TheButtonInfo {
-
 public:
-    QUrl* url; // video file to play
-    QIcon* icon; // icon to display
+    QUrl* url;
+    QIcon* icon;
+    int likes;
+    QString subtitle;
+    bool userLiked; // Added variable to track user's like state
 
-    TheButtonInfo ( QUrl* url, QIcon* icon) : url (url), icon (icon) {}
+    TheButtonInfo(QUrl* url, QIcon* icon, int likes, std::string subtitle)
+        : url(url), icon(icon), likes(likes), subtitle(QString::fromStdString(subtitle)), userLiked(false) {}
+
 };
+
+
 
 class TheButton : public QPushButton {
     Q_OBJECT
@@ -29,9 +34,11 @@ public:
     }
 
     void init(TheButtonInfo* i);
+    void likeButtonClicked();
 
 private slots:
     void clicked();
+
 
 signals:
     void jumpTo(TheButtonInfo*);

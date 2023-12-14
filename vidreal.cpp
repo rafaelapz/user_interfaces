@@ -28,6 +28,7 @@
 #include "login.h"
 
 // read in videos and thumbnails to this directory
+// read in videos and thumbnails to this directory
 std::vector<TheButtonInfo> getInfoIn (std::string loc) {
 
     std::vector<TheButtonInfo> out = std::vector<TheButtonInfo>();
@@ -46,20 +47,35 @@ std::vector<TheButtonInfo> getInfoIn (std::string loc) {
         if (f.contains(".mp4") || f.contains("MOV")) { // mac/linux
 #endif
 
-            QString thumb = f.left( f .length() - 4) +".png";
+            QString thumb = f.section(".", 0, -2) +".png";
             if (QFile(thumb).exists()) { // if a png thumbnail exists
                 QImageReader *imageReader = new QImageReader(thumb);
                 QImage sprite = imageReader->read(); // read the thumbnail
                 if (!sprite.isNull()) {
                     QIcon* ico = new QIcon(QPixmap::fromImage(sprite)); // voodoo to create an icon for the button
                     QUrl* url = new QUrl(QUrl::fromLocalFile( f )); // convert the file location to a generic url
-                    out . push_back(TheButtonInfo( url , ico ) ); // add to the output list
+
+                    // read the .txt file
+                    QString txtFileName = f.section(".", 0, -2) + ".txt";
+                    QFile txtFile(txtFileName);
+                    if (txtFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+                        QTextStream in(&txtFile);
+                        int likes = in.readLine().toInt();
+                        std::string subtitle = in.readLine().toStdString();
+                        txtFile.close();
+
+                        // add to the output list
+                        out.push_back(TheButtonInfo(url, ico, likes, subtitle));
+                    }
+                    else {
+                        qDebug() << "warning: skipping video because I couldn't process .txt file " << txtFileName << endl;
+                    }
                 }
                 else
-                    qDebug() << "warning: skipping video because I couldn't process thumbnail " << thumb << "\n";
+                    qDebug() << "warning: skipping video because I couldn't process thumbnail " << thumb << endl;
             }
             else
-                qDebug() << "warning: skipping video because I couldn't find thumbnail " << thumb << Qt::endl;
+                qDebug() << "warning: skipping video because I couldn't find thumbnail " << thumb << endl;
         }
     }
 
@@ -120,6 +136,64 @@ QWidget* createHomepage(QStackedWidget *stackedWidget, QVideoWidget *videoWidget
     QToolButton *playButton = new QToolButton();
     QToolButton *pauseButton = new QToolButton();
 
+    // create right arrow button
+    QToolButton *rightArrowButton = new QToolButton();
+    rightArrowButton->setIcon(QIcon("://right.svg"));
+    rightArrowButton->setStyleSheet("QToolButton {"
+                                    " background-color: #ffffff;"
+                                    " border: none;"
+                                    "}"
+                                    "QToolButton:pressed {"
+                                    " background-color: #606060;"
+                                    "}");
+
+    // Connect the clicked signal of the right arrow button to move to the next video
+    QObject::connect(rightArrowButton, &QToolButton::clicked, [=]() {
+        QString currentVideoUrl = player->currentMedia().canonicalUrl().toString();
+        for (size_t i = 0; i < buttons->size(); ++i) {
+            if (buttons->at(i)->info->url->toString() == currentVideoUrl) {
+                int nextIndex = (i + 1) % buttons->size();
+                TheButtonInfo* nextVideo = buttons->at(nextIndex)->info;
+                player->jumpTo(nextVideo);
+                break;
+            }
+        }
+    });
+
+    // create left arrow button
+    QToolButton *leftArrowButton = new QToolButton();
+    leftArrowButton->setIcon(QIcon("://left.svg"));
+    leftArrowButton->setStyleSheet("QToolButton {"
+                                   " background-color: #ffffff;"
+                                   " border: none;"
+                                   "}"
+                                   "QToolButton:pressed {"
+                                   " background-color: #606060;"
+                                   "}");
+
+    // Connect the clicked signal of the left arrow button to move to the previous video
+    QObject::connect(leftArrowButton, &QToolButton::clicked, [=]() {
+        QString currentVideoUrl = player->currentMedia().canonicalUrl().toString();
+        for (size_t i = 0; i < buttons->size(); ++i) {
+            if (buttons->at(i)->info->url->toString() == currentVideoUrl) {
+                int prevIndex = (i - 1 + buttons->size()) % buttons->size(); // Handle wrapping around to the end
+                TheButtonInfo* prevVideo = buttons->at(prevIndex)->info;
+                player->jumpTo(prevVideo);
+                break;
+            }
+        }
+    });
+
+
+
+
+    // add the left arrow button to the button layout
+    buttonLayout->addWidget(leftArrowButton);
+
+    // add the right and left arrow buttons to the button layout
+    buttonLayout->addWidget(leftArrowButton);
+    buttonLayout->addWidget(rightArrowButton);
+
     // set the icons of the buttons
     playButton->setIcon(QIcon("://play-circle-fill.svg"));
     pauseButton->setIcon(QIcon("://pause-circle-fill.svg"));
@@ -152,15 +226,90 @@ QWidget* createHomepage(QStackedWidget *stackedWidget, QVideoWidget *videoWidget
     QWidget *buttonWidget = new QWidget();
     buttonWidget->setLayout(buttonLayout);
 
-    // add the video widget and the button widget to the homepage layout
+    // Create QLabel for subtitle
+    QLabel *subtitleLabel = new QLabel;
+    subtitleLabel->setAlignment(Qt::AlignCenter);
+
+    // Set the font size
+    QFont subtitleFont = subtitleLabel->font();
+    subtitleFont.setPointSize(16);  // Set the desired font size
+    subtitleLabel->setFont(subtitleFont);
+
+
+
+    // Create like button and QLabel for likes
+    QPushButton* likeButton = new QPushButton();
+    likeButton->setIcon(QIcon(":/heart.png"));
+    QLabel *likeLabel = new QLabel;
+
+    // Create a QHBoxLayout for subtitle and likes
+    QHBoxLayout *infoLayout = new QHBoxLayout();
+    infoLayout->addWidget(subtitleLabel);
+    infoLayout->addStretch(); // Add a stretchable space between subtitle and likes
+    infoLayout->addWidget(likeButton);
+    infoLayout->addWidget(likeLabel);
+
+    // Create a QWidget to hold the subtitle and likes layout
+    QWidget *infoWidget = new QWidget;
+    infoWidget->setLayout(infoLayout);
+
+    // Connect signals to update subtitle and likes when the media changes
+    QObject::connect(player, &ThePlayer::mediaChanged, [=]() {
+        const QString currentVideoUrl = player->currentMedia().canonicalUrl().toString();
+        for (size_t i = 0; i < videos->size(); ++i) {
+            if (videos->at(i).url->toString() == currentVideoUrl) {
+                subtitleLabel->setText(videos->at(i + 1).subtitle);
+                likeLabel->setText(QString::number(videos->at(i + 1).likes));
+                break;
+            }
+        }
+    });
+
+    // Connect like button click signal to the slot
+    // Connect like button click signal to the slot
+    QObject::connect(likeButton, &QPushButton::clicked, [=]() {
+        // Get the current video index
+        int currentIndex = -1;
+        for (size_t i = 0; i < buttons->size(); ++i) {
+            if (buttons->at(i)->info->url->toString() == player->currentMedia().canonicalUrl().toString()) {
+                currentIndex = i;
+                break;
+            }
+        }
+
+        // Check if the current video index is valid
+        if (currentIndex >= 0 && currentIndex < static_cast<int>(videos->size())) {
+            // Emit like button clicked signal for the current video
+            buttons->at(currentIndex)->likeButtonClicked();
+
+            // Update the like label immediately for the current video
+            likeLabel->setText(QString::number(videos->at(currentIndex).likes));
+        }
+    });
+
+
+
+    // Add the video widget, info widget, button widget to the homepage layout
     homepageLayout->addWidget(videoWidget);
+    homepageLayout->addWidget(infoWidget);
     homepageLayout->addWidget(buttonWidget);
+
 
     // add the homepage to the stacked widget
     stackedWidget->addWidget(homepage);
 
+    // Set initial subtitle and likes for the first video
+    if (!videos->empty()) {
+        subtitleLabel->setText(videos->at(0).subtitle);
+        likeLabel->setText(QString::number(videos->at(0).likes));
+    }
+
+
+    // Trigger the initial update for the first video when the application is opened
+    player->simulateMediaChanged();
     return homepage;
 }
+
 
 QWidget* createRecordVideoPage(QStackedWidget *stackedWidget, Recorder *recorder) {
     // create the Record Video page widget

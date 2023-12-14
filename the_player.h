@@ -51,6 +51,7 @@ public slots:
 
     // start playing this ButtonInfo
     void jumpTo (TheButtonInfo* button);
+    void simulateMediaChanged();
 };
 
 #endif //CW2_THE_PLAYER_H
