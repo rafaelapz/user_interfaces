@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>pause-circle-fill.svg</file>
+        <file>play-circle-fill.svg</file>
+        <file>heart.png</file>
+        <file>left.svg</file>
+        <file>right.svg</file>
+    </qresource>
+</RCC>
