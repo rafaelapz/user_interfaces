@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 11.0.3, 2023-12-14T11:37:18. -->
+<!-- Written by QtCreator 11.0.3, 2023-12-12T20:07:10. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -241,10 +241,10 @@
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
     <value type="bool" key="PE.EnvironmentAspect.PrintOnRun">false</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">the2</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:D:/QT/userinterfaces_sourcecontrol/user_interfaces-basis/newbranch/the.pro</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">D:/QT/userinterfaces_sourcecontrol/user_interfaces-basis/newbranch/the.pro</value>
-    <value type="QString" key="RunConfiguration.Arguments">&quot;D:\QT\userinterfaces_sourcecontrol\user_interfaces-basis\newbranch\videos&quot;</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">the3</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:D:/QT/userinterfaces_sourcecontrol/user_interfaces/the.pro</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">D:/QT/userinterfaces_sourcecontrol/user_interfaces/the.pro</value>
+    <value type="QString" key="RunConfiguration.Arguments">&quot;D:\QT\userinterfaces_sourcecontrol\user_interfaces\videos&quot;</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseLibrarySearchPath">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>

@@ -43,7 +43,7 @@ public:
 private slots:
 
     // change the image and video for one button every one second
-    void shuffle();
+    //void shuffle();
 
     void playStateChanged (QMediaPlayer::State ms);
 
@@ -51,6 +51,7 @@ public slots:
 
     // start playing this ButtonInfo
     void jumpTo (TheButtonInfo* button);
+    void simulateMediaChanged();
 };
 
 #endif //CW2_THE_PLAYER_H

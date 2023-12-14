@@ -3,22 +3,6 @@
 #include <QVBoxLayout>
 #include <QLineEdit>
 #include <QPushButton>
-#include <QMap>
-#include <QLabel>
-
-#include "login.h"
-#include <QDialog>
-#include <QVBoxLayout>
-#include <QLineEdit>
-#include <QPushButton>
-#include <QLabel>
-#include <QMap>
-
-#include "login.h"
-#include <QDialog>
-#include <QVBoxLayout>
-#include <QLineEdit>
-#include <QPushButton>
 #include <QLabel>
 #include <QMap>
 
