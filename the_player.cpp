@@ -28,7 +28,9 @@ void ThePlayer::playStateChanged (QMediaPlayer::State ms) {
         break;
     }
 }
-
+void ThePlayer::simulateMediaChanged() {
+    emit mediaStatusChanged(QMediaPlayer::LoadedMedia);
+}
 void ThePlayer::jumpTo (TheButtonInfo* button) {
     setMedia( * button -> url);
     play();

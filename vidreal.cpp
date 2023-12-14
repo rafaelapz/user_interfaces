@@ -27,6 +27,7 @@
 #include <QToolButton>
 #include "login.h"
 
+
 // read in videos and thumbnails to this directory
 std::vector<TheButtonInfo> getInfoIn (std::string loc) {
 
