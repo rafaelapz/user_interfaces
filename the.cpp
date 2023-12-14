@@ -18,7 +18,6 @@
 #include "the_button.h"
 #include "recorder.h"
 #include <QStackedWidget>
-#include "recordvideopage.h"
 #include <QLineEdit>
 #include <QStandardItemModel>
 #include <QCompleter>
@@ -84,7 +83,7 @@ std::vector<TheButtonInfo> getInfoIn (std::string loc) {
     return out;
 }
 
-QWidget* createMemoriesPage(QStackedWidget *stackedWidget, QWidget *buttonWidget, ThePlayer *playerMem, std::vector<TheButton*> *buttons, std::vector<TheButtonInfo> *videosMem) {
+QWidget* createMemoriesPage(QStackedWidget *stackedWidget, QWidget *buttonWidget) {
     // create the Memories page widget
     QWidget *memoriesPage = new QWidget();
     QVBoxLayout *memoriesPageLayout = new QVBoxLayout(memoriesPage);
@@ -111,67 +110,15 @@ QWidget* createMemoriesPage(QStackedWidget *stackedWidget, QWidget *buttonWidget
         daysLayout->addWidget(dayLabel);
     }
 
-    // a row of buttons
-    QWidget *buttonRow= new QWidget();
-    // a list of the buttons
-    std::vector<TheButton*> dayButtons;
-    // create grid layout
-    QGridLayout *calendar = new QGridLayout();
-    // changed layout to grid
-    buttonRow->setLayout(calendar);
-    buttonRow->setFixedHeight(260);
-
     daysLayout->setSpacing(3);
     daysWidget->setLayout(daysLayout);
     daysWidget->setFixedHeight(60);
-
-    // create days to put inside calender
-    QWidget *dayWidgets[24];
-
-    // create layout for buttons
-    int start = 5;
-
-    for ( int i = 0; i < 7; i++ ) {
-        TheButton *button = new TheButton(buttonRow);
-        button->setFixedWidth(70);
-        button->setFixedHeight(110);
-        button->connect(button, SIGNAL(jumpTo(TheButtonInfo* )), playerMem, SLOT (jumpTo(TheButtonInfo*))); // when clicked, tell the player to play.
-        button->connect(button, &QPushButton::clicked, [=](){ stackedWidget->setCurrentIndex(4); }); // when clicked, change page to the player window
-        buttons->push_back(button);
-
-        int row = (start + i) / 7;
-        int col = (start + i) % 7;
-
-//        QWidget date;
-//        QVBoxLayout dateLayout(&date);
-//        QString num = QString::number(i);
-//        QLabel dateNumber("<h1>" + num + "</h1>");
-//        dateNumber.setFixedWidth(70);
-//        dateNumber.setFixedHeight(20);
-
-//        dateLayout.addWidget(&dateNumber);
-//        dateLayout.addWidget(button);
-
-        calendar->addWidget(button, row, col);
-
-        button->init(&videosMem->at(i));
-    }
-
-//    for ( int i = 0; i < 24; i++ ) {
-//        int j = i + 7;
-//        dayWidgets[i]->setFixedWidth(70);
-//        dayWidgets[i]->setFixedHeight(110);
-//        int row = (start + j) / 7;
-//        int col = (start + j) % 7;
-
-//        calendar->addWidget(dayWidgets[i], row, col);
-//    }
 
     // add the labels and the buttons to the Memories page
     memoriesPageLayout->addWidget(labelMem);
     memoriesPageLayout->addWidget(monthLabel);
     memoriesPageLayout->addWidget(daysWidget);
-    memoriesPageLayout->addWidget(buttonRow);
+    memoriesPageLayout->addWidget(buttonWidget);
 
     // add the Memories page to the stacked widget
     stackedWidget->addWidget(memoriesPage);
@@ -408,7 +355,7 @@ QWidget* createRecordVideoPage(QStackedWidget *stackedWidget, Recorder *recorder
     return recordVideoPage;
 }
 
-QWidget* createSearchPage(QStackedWidget *stackedWidget, std::vector<TheButton*> *buttons, ThePlayer *playerMem,std::vector<TheButtonInfo> *videosMem, QVideoWidget *videoWidgetMem) {
+QWidget* createSearchPage(QStackedWidget *stackedWidget) {
     // create the Search page widget
     QWidget *searchPage = new QWidget();
     QVBoxLayout *searchPageLayout = new QVBoxLayout(searchPage);
@@ -494,25 +441,6 @@ QWidget* createSearchPage(QStackedWidget *stackedWidget, std::vector<TheButton*>
     }
 
 
-    // ADDING A NEW WINDOW FOR THE MEMORIES PLAYER
-
-    // tell the player what buttons and videos are available
-    playerMem->setContent(buttons, videosMem);
-
-    // create new window for player
-    QWidget *playerWindow = new QWidget();
-    QVBoxLayout *playerTop = new QVBoxLayout();
-    playerWindow->setLayout(playerTop);
-    stackedWidget->addWidget(playerWindow);
-
-    // create back button to switch to memories page
-    QPushButton *backButton = new QPushButton("Back", playerWindow);
-    backButton->setStyleSheet("color: black; background-color: white; width: 450px");
-    backButton->connect(backButton, &QPushButton::clicked, [=](){ stackedWidget->setCurrentIndex(2); }); // when clicked, change page to the player window
-    playerTop->addWidget(backButton);
-
-    playerTop->addWidget(videoWidgetMem);
-
     return searchPage;
 }
 
@@ -532,13 +460,9 @@ int main(int argc, char *argv[]) {
     // collect all the videos in the folder
     std::vector<TheButtonInfo> videos;
 
-    // another one for memories
-    std::vector<TheButtonInfo> videosMem;
-
-    if (argc == 2) {
+    if (argc == 2)
         videos = getInfoIn( std::string(argv[1]) );
-        videosMem = getInfoIn( std::string(argv[1]) );
-    }
+
     if (videos.size() == 0) {
         const int result = QMessageBox::information(
             NULL,
@@ -595,16 +519,6 @@ int main(int argc, char *argv[]) {
 
     Recorder *recorder = new Recorder;
 
-    // FOR MEMORIES PAGE
-
-    // the widget that will show the video
-    QVideoWidget *videoWidgetMem = new QVideoWidget;
-    videoWidgetMem->setFixedSize(522,900);
-
-    // the QMediaPlayer which controls the playback
-    ThePlayer *playerMem = new ThePlayer;
-    playerMem->setVideoOutput(videoWidgetMem);
-
     // create the homepage widget
     createHomepage(stackedWidget, videoWidget, player, &buttons, &videos);
 
@@ -612,10 +526,10 @@ int main(int argc, char *argv[]) {
     createRecordVideoPage(stackedWidget, recorder);
 
     // create the Memories page widget
-    createMemoriesPage(stackedWidget, buttonWidgetmem, playerMem, &buttons, &videosMem);
+    createMemoriesPage(stackedWidget, buttonWidgetmem);
 
     // create the Search page widget
-    createSearchPage(stackedWidget, &buttons, playerMem, &videos, videoWidgetMem);
+    createSearchPage(stackedWidget);
 
     // connect the recordButton and memoriesButton to switch pages
     QObject::connect(recordButton, &QPushButton::clicked, [=]() {
